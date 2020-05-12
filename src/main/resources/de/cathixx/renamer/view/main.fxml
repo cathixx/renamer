@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<VBox prefHeight="800.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <BorderPane VBox.vgrow="ALWAYS">
+         <bottom>
+            <HBox fillHeight="false" prefHeight="20.0" spacing="10.0" BorderPane.alignment="CENTER">
+               <children>
+                  <ProgressIndicator fx:id="viewProgress" prefHeight="18.0" prefWidth="18.0">
+                     <HBox.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </HBox.margin>
+                  </ProgressIndicator>
+                  <Label fx:id="viewStatusText" text="Labe">
+                     <HBox.margin>
+                        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                     </HBox.margin></Label>
+               </children>
+               <BorderPane.margin>
+                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+               </BorderPane.margin>
+            </HBox>
+         </bottom>
+         <center>
+            <TableView fx:id="viewEpisodesTable" BorderPane.alignment="CENTER">
+               <BorderPane.margin>
+                  <Insets right="5.0" top="5.0" />
+               </BorderPane.margin></TableView>
+         </center>
+         <left>
+            <VBox BorderPane.alignment="CENTER">
+               <children>
+                  <TextField fx:id="viewTVShowName">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin></TextField>
+                  <ListView fx:id="viewTVShowList" VBox.vgrow="ALWAYS">
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin></ListView>
+                  <CheckBox fx:id="viewIncludeTitle" mnemonicParsing="false" text="Serienname einfügen" />
+                  <HBox>
+                     <children>
+                        <ChoiceBox fx:id="viewLanguageBox" prefHeight="38.0" prefWidth="150.0">
+                           <HBox.margin>
+                              <Insets right="3.0" />
+                           </HBox.margin>
+                        </ChoiceBox>
+                        <Button fx:id="viewRenameButton" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" text="Umbenennen" textAlignment="CENTER">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Button>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                  </HBox>
+               </children>
+               <BorderPane.margin>
+                  <Insets left="5.0" right="5.0" top="5.0" />
+               </BorderPane.margin>
+            </VBox>
+         </left>
+         <right>
+            <ImageView fx:id="viewTVShowImage" fitHeight="750.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
+         </right>
+      </BorderPane>
+   </children>
+</VBox>

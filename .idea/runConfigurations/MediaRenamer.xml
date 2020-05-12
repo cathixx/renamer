@@ -1,0 +1,17 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="MediaRenamer" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="de.cathixx.renamer.Launcher" />
+    <module name="renamer.main" />
+    <option name="PROGRAM_PARAMETERS" value="src\test\resources\Eureka" />
+    <option name="VM_PARAMETERS" value="-Xmx4g" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="de.cathixx.renamer.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

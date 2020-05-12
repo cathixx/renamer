@@ -1,0 +1,66 @@
+plugins {
+    id 'application'
+    id 'idea'
+    id 'eclipse'
+    id 'io.freefair.lombok' version '5.0.0'
+    id 'org.openjfx.javafxplugin' version '0.0.8'
+}
+
+group = 'de.cathixx'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+javafx {
+    version = "13"
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    implementation "com.uwetrottmann.thetvdb-java:thetvdb-java:1.4.2"
+    implementation "info.movito:themoviedbapi:1.10"
+    implementation "org.slf4j:slf4j-api:1.7.25"
+
+    testImplementation "junit:junit:3.8.1"
+
+    runtimeOnly "org.apache.logging.log4j:log4j-slf4j-impl:2.8.2"
+    runtimeOnly "org.apache.logging.log4j:log4j-api:2.8.2"
+    runtimeOnly "org.apache.logging.log4j:log4j-core:2.8.2"
+
+    // include javafx windows binaries to jar
+    runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:win"
+    // include javafx linux binaries to jar
+    runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:linux"
+    // include javafx mac binaries to jar
+    runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:mac"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+application {
+    mainClassName = 'de.cathixx.renamer.Launcher'
+}
+
+jar {
+    archiveFileName = 'renamer.jar'
+    manifest {
+        attributes "Main-Class": application.mainClassName
+        attributes 'Implementation-Version': archiveVersion.get()
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+clean {
+    delete 'out'
+}

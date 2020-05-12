@@ -1,0 +1,2 @@
+src/main/java/de/cathixx/renamer/util/ApiKeyProvider.java filter=git-crypt diff=git-crypt
+*.jar filter=lfs diff=lfs merge=lfs -text
