@@ -3,7 +3,7 @@ package de.cathixx.renamer.apiadapter;
 import de.cathixx.renamer.data.Episode;
 import de.cathixx.renamer.data.Language;
 import de.cathixx.renamer.data.TVShow;
-import de.cathixx.renamer.util.ApiKeyProvider;
+import de.cathixx.renamer.key.ApiKeyProvider;
 import de.cathixx.renamer.util.TVShowComparator;
 import info.movito.themoviedbapi.TmdbApi;
 import info.movito.themoviedbapi.TvResultsPage;

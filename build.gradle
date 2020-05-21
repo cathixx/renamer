@@ -21,9 +21,14 @@ javafx {
 repositories {
     mavenCentral()
     jcenter()
+    maven {
+        url "repo"
+    }
 }
 
 dependencies {
+    implementation "de.cathixx:renamer-key:1.0.0"
+
     implementation "com.uwetrottmann.thetvdb-java:thetvdb-java:1.4.2"
     implementation "info.movito:themoviedbapi:1.10"
     implementation "org.slf4j:slf4j-api:1.7.25"
