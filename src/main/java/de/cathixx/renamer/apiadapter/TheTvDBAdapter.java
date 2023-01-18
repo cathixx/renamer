@@ -134,7 +134,7 @@ public class TheTvDBAdapter implements TVShowApiAdapter {
     long start = System.currentTimeMillis();
     try {
       String lang = language.getApiName();
-      Response<SeriesResultsResponse> response = this.tvDB.search().series(name, null, null, lang).execute();
+      Response<SeriesResultsResponse> response = this.tvDB.search().series(name, null, null, null, lang).execute();
       if (response.isSuccessful()) {
         return response.body().data;
       }
