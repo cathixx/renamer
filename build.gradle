@@ -56,6 +56,7 @@ application {
 }
 
 jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     archiveFileName = 'renamer.jar'
     manifest {
         attributes "Main-Class": application.mainClassName
