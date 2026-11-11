@@ -2,8 +2,8 @@ plugins {
     id 'application'
     id 'idea'
     id 'eclipse'
-    id 'io.freefair.lombok' version '9.8.3'
-    id 'org.openjfx.javafxplugin' version '0.1.0'
+    alias(libs.plugins.lombok)
+    alias(libs.plugins.javafx)
 }
 
 group = 'de.cathixx'
@@ -15,7 +15,8 @@ java {
 }
 
 javafx {
-    version = "27.0.1"
+    // single source for the JavaFX version: gradle/libs.versions.toml
+    version = libs.versions.javafx.get()
     modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
@@ -27,27 +28,24 @@ repositories {
 }
 
 dependencies {
-    implementation "de.cathixx:renamer-key:1.0.0"
+    implementation libs.renamer.key
 
-    implementation "com.uwetrottmann.thetvdb-java:thetvdb-java:2.4.0"
-    implementation "uk.co.conoregan:themoviedbapi:3.1.0"
-    implementation "org.slf4j:slf4j-api:2.0.20"
+    implementation libs.thetvdb.java
+    implementation libs.themoviedbapi
+    implementation libs.slf4j.api
 
-    testImplementation platform("org.junit:junit-bom:6.1.3")
-    testImplementation "org.junit.jupiter:junit-jupiter"
-    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+    testImplementation platform(libs.junit.bom)
+    testImplementation libs.junit.jupiter
+    testRuntimeOnly libs.junit.platform.launcher
 
-    runtimeOnly platform("org.apache.logging.log4j:log4j-bom:2.26.1")
-    runtimeOnly "org.apache.logging.log4j:log4j-slf4j2-impl"
-    runtimeOnly "org.apache.logging.log4j:log4j-api"
-    runtimeOnly "org.apache.logging.log4j:log4j-core"
+    runtimeOnly platform(libs.log4j.bom)
+    runtimeOnly libs.bundles.log4j
 
-    // include javafx windows binaries to jar
-    runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:win"
-    // include javafx linux binaries to jar
-    runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:linux"
-    // include javafx mac binaries to jar
-    runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:mac"
+    // include the native JavaFX binaries of all platforms in the jar
+    // (mac-aarch64 can't be added: its native libraries have the same file names as the mac x64 ones)
+    ['win', 'linux', 'mac'].each { platform ->
+        runtimeOnly(variantOf(libs.javafx.graphics) { classifier(platform) })
+    }
 }
 
 test {

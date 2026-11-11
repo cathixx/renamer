@@ -5,14 +5,21 @@ name: Build & Release
 on:
   push:
     branches: [ main ]
-    paths-ignore: &no-release-paths
+    # changes that don't affect the jar don't create a release
+    paths-ignore:
       - '**.md'
       - 'LICENSE'
       - '.idea/**'
       - '.editorconfig'
+      - '.github/**'
   pull_request:
     branches: [ main ]
-    paths-ignore: *no-release-paths
+    # workflow changes (e.g. Dependabot updates of actions) are still tested in PRs
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '.idea/**'
+      - '.editorconfig'
   workflow_dispatch:
 
 # Releases are queued so two pushes in quick succession can't compute the same version.
