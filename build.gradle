@@ -2,27 +2,27 @@ plugins {
     id 'application'
     id 'idea'
     id 'eclipse'
-    id 'io.freefair.lombok' version '6.4.3'
-    id 'org.openjfx.javafxplugin' version '0.0.13'
+    id 'io.freefair.lombok' version '9.8.3'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
 }
 
 group = 'de.cathixx'
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
 }
 
 javafx {
-    version = "19"
+    version = "27.0.1"
     modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
 repositories {
     mavenCentral()
-    jcenter()
     maven {
-        url "repo"
+        url = "repo"
     }
 }
 
@@ -30,14 +30,17 @@ dependencies {
     implementation "de.cathixx:renamer-key:1.0.0"
 
     implementation "com.uwetrottmann.thetvdb-java:thetvdb-java:2.4.0"
-    implementation "info.movito:themoviedbapi:1.10"
-    implementation "org.slf4j:slf4j-api:2.0.5"
+    implementation "uk.co.conoregan:themoviedbapi:3.1.0"
+    implementation "org.slf4j:slf4j-api:2.0.20"
 
-    testImplementation "org.junit.jupiter:junit-jupiter:5.9.1"
+    testImplementation platform("org.junit:junit-bom:6.1.3")
+    testImplementation "org.junit.jupiter:junit-jupiter"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
 
-    runtimeOnly "org.apache.logging.log4j:log4j-slf4j2-impl:2.19.0"
-    runtimeOnly "org.apache.logging.log4j:log4j-api:2.19.0"
-    runtimeOnly "org.apache.logging.log4j:log4j-core:2.19.0"
+    runtimeOnly platform("org.apache.logging.log4j:log4j-bom:2.26.1")
+    runtimeOnly "org.apache.logging.log4j:log4j-slf4j2-impl"
+    runtimeOnly "org.apache.logging.log4j:log4j-api"
+    runtimeOnly "org.apache.logging.log4j:log4j-core"
 
     // include javafx windows binaries to jar
     runtimeOnly "org.openjfx:javafx-graphics:$javafx.version:win"
@@ -52,15 +55,17 @@ test {
 }
 
 application {
-    mainClassName = 'de.cathixx.renamer.Launcher'
+    mainClass = 'de.cathixx.renamer.Launcher'
 }
 
 jar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     archiveFileName = 'renamer.jar'
     manifest {
-        attributes "Main-Class": application.mainClassName
+        attributes "Main-Class": application.mainClass.get()
         attributes 'Implementation-Version': archiveVersion.get()
+        // JavaFX loads native libraries, avoid the JDK warning about restricted method calls
+        attributes 'Enable-Native-Access': 'ALL-UNNAMED'
     }
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }

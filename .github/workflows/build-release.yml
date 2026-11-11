@@ -1,0 +1,95 @@
+name: Build & Release
+
+# Pull Requests: build only (incl. tests), the jar is attached to the run as artifact.
+# Push to main: build with the next version number, then create the tag and the GitHub release.
+on:
+  push:
+    branches: [ main ]
+    paths-ignore: &no-release-paths
+      - '**.md'
+      - 'LICENSE'
+      - '.idea/**'
+      - '.editorconfig'
+  pull_request:
+    branches: [ main ]
+    paths-ignore: *no-release-paths
+  workflow_dispatch:
+
+# Releases are queued so two pushes in quick succession can't compute the same version.
+# Outdated PR builds are cancelled instead.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    outputs:
+      version: ${{ steps.version.outputs.new_tag }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          lfs: true          # gradle-wrapper.jar and renamer-key are stored in Git LFS
+          fetch-depth: 0     # full history + tags, needed to determine the next version
+
+      - name: Determine next version
+        id: version
+        if: github.event_name != 'pull_request'
+        uses: anothrNick/github-tag-action@1.75.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          DEFAULT_BUMP: patch  # use #minor or #major in the commit message for bigger steps
+          DRY_RUN: true        # only calculate, the tag is created together with the release
+
+      - name: Setup Java
+        uses: actions/setup-java@v6
+        with:
+          distribution: 'zulu'
+          java-version: 25
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6  # caches dependencies and validates the wrapper jar
+
+      - name: Build
+        run: ./gradlew build ${{ steps.version.outputs.new_tag && format('-Pversion={0}', steps.version.outputs.new_tag) || '' }}
+
+      - name: Upload jar
+        uses: actions/upload-artifact@v7
+        with:
+          name: renamer
+          path: build/libs/renamer.jar
+          if-no-files-found: error
+
+  release:
+    needs: build
+    # version is empty if the commit is already tagged (e.g. manual re-run)
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && needs.build.outputs.version != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    permissions:
+      contents: write  # create tag and release
+
+    steps:
+      - name: Download jar
+        uses: actions/download-artifact@v8
+        with:
+          name: renamer
+
+      - name: Create release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ needs.build.outputs.version }}
+          target_commitish: ${{ github.sha }}
+          name: Release ${{ needs.build.outputs.version }}
+          generate_release_notes: true
+          files: renamer.jar
+          fail_on_unmatched_files: true

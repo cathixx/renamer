@@ -1,1 +1,6 @@
+# Alle Textdateien werden mit LF ins Repo geschrieben und auf jedem System
+# (Windows, WSL, Linux, macOS) mit LF ausgecheckt - unabhaengig von core.autocrlf.
+* text=auto eol=lf
+
+# Binaerdateien
 *.jar filter=lfs diff=lfs merge=lfs -text

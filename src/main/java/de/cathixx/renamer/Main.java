@@ -31,9 +31,4 @@ public class Main extends Application {
     return baseTitleString.replace("{}", version);
   }
 
-  public static void main(String[] args) {
-    log.info("start");
-    launch(args);
-  }
-
 }

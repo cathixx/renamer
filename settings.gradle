@@ -1,1 +1,6 @@
-rootProject.name="renamer"
+plugins {
+    // lets Gradle download the configured Java toolchain (JDK 25) if it's not installed locally
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
+}
+
+rootProject.name = "renamer"
