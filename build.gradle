@@ -22,15 +22,9 @@ javafx {
 
 repositories {
     mavenCentral()
-    maven {
-        url = "repo"
-    }
 }
 
 dependencies {
-    implementation libs.renamer.key
-
-    implementation libs.thetvdb.java
     implementation libs.themoviedbapi
     implementation libs.slf4j.api
 
@@ -51,6 +45,42 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+// TMDB API key, embedded into the jar as resource (read by ApiKeyProvider)
+// - CI: environment variable TMDB_API_KEY (repository secret)
+// - local development: TMDB_API_KEY in the .env file (not committed, see .env.example)
+def tmdbApiKey = providers.environmentVariable('TMDB_API_KEY')
+        .orElse(providers.fileContents(layout.projectDirectory.file('.env')).asText.map { readDotEnv(it, 'TMDB_API_KEY') })
+        .filter { !it.isBlank() }
+
+static String readDotEnv(String content, String name) {
+    content.readLines()
+            .collect { it.trim() }
+            .findAll { it && !it.startsWith('#') && it.contains('=') }
+            .collectEntries { line ->
+                def (key, value) = line.split('=', 2)
+                [(key.trim()): value.trim().replaceAll(/^["']|["']$/, '')]
+            }[name]
+}
+
+def generateApiKeys = tasks.register('generateApiKeys') {
+    description = 'Writes the API keys into a resource file that is embedded into the jar.'
+    def apiKey = tmdbApiKey.orElse('')
+    def outputDir = layout.buildDirectory.dir('generated/resources/apikeys')
+    inputs.property('tmdbApiKey', apiKey)
+    outputs.dir(outputDir)
+    doLast {
+        def file = outputDir.get().file('de/cathixx/renamer/apikeys.properties').asFile
+        file.parentFile.mkdirs()
+        file.text = "tmdb=${apiKey.get()}\n"
+        if (apiKey.get().isEmpty()) {
+            logger.warn('WARNING: no TMDB API key found (environment variable TMDB_API_KEY or .env), ' +
+                    'the application will only work with a key provided at runtime')
+        }
+    }
+}
+
+sourceSets.main.resources.srcDir(generateApiKeys)
 
 application {
     mainClass = 'de.cathixx.renamer.Launcher'

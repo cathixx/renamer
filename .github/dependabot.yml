@@ -12,9 +12,6 @@ updates:
     directory: "/"
     patterns: ["*"]
     multi-ecosystem-group: "all-dependencies"
-    ignore:
-      # served from the local file repository in ./repo, not resolvable by Dependabot
-      - dependency-name: "de.cathixx:*"
 
   # GitHub Actions used in .github/workflows
   - package-ecosystem: "github-actions"

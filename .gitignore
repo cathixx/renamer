@@ -23,3 +23,5 @@ lombok.config
 !/.idea
 /.idea/*
 !/.idea/runConfigurations
+### local secrets ###
+.env

@@ -43,7 +43,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
         with:
-          lfs: true          # gradle-wrapper.jar and renamer-key are stored in Git LFS
+          lfs: true          # gradle-wrapper.jar is stored in Git LFS
           fetch-depth: 0     # full history + tags, needed to determine the next version
 
       - name: Determine next version
@@ -65,7 +65,20 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6  # caches dependencies and validates the wrapper jar
 
+      - name: Check API key
+        # releases must contain the API key; PR builds (e.g. from forks or Dependabot) don't get secrets
+        if: github.event_name != 'pull_request'
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+        run: |
+          if [ -z "$TMDB_API_KEY" ]; then
+            echo "::error::Repository secret TMDB_API_KEY is missing"
+            exit 1
+          fi
+
       - name: Build
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}  # embedded into the jar, see build.gradle
         run: ./gradlew build ${{ steps.version.outputs.new_tag && format('-Pversion={0}', steps.version.outputs.new_tag) || '' }}
 
       - name: Upload jar

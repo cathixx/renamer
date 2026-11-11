@@ -1,5 +1,6 @@
 package de.cathixx.renamer.gui;
 
+import de.cathixx.renamer.apiadapter.ApiKeyProvider;
 import de.cathixx.renamer.apiadapter.TVShowApiAdapter;
 import de.cathixx.renamer.apiadapter.TheMovieDBAdapter;
 import de.cathixx.renamer.data.DirectoryInfos;
@@ -35,9 +36,16 @@ public class MainController {
     this.model = new MainModel(primaryStage, directoryInfos, resources);
     this.view = new MainView(resources, this.model.getLoading());
     this.executor = new TaskExecutor(this.view, resources);
-    this.tvAdapter = new TheMovieDBAdapter(this.view.getSelectableLanguages());
+    this.tvAdapter = new TheMovieDBAdapter(this.view.getSelectableLanguages(), getMovieDbKey(resources));
     initialize(directoryInfos);
     bindModelViewController();
+  }
+
+  private static String getMovieDbKey(ResourceBundle resources) {
+    return ApiKeyProvider.getMovieDbKey().orElseGet(() -> {
+      DialogSupport.showError("error.apikey.missing", resources, ApiKeyProvider.ENV_TMDB_API_KEY, true);
+      throw new IllegalStateException("no TMDB API key available");
+    });
   }
 
   private void bindModelViewController() {

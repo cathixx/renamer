@@ -18,3 +18,5 @@ Hinweise für KI-Agenten, die in diesem Repository arbeiten.
 - Alle Versionen von Abhängigkeiten und Plugins stehen in `gradle/libs.versions.toml`.
 - Einstiegspunkt ist `de.cathixx.renamer.Launcher`, nicht `Main` (sonst: „JavaFX-Runtime-Komponenten fehlen“).
 - Alle Textdateien verwenden LF als Zeilenende (siehe `.gitattributes`, `.editorconfig`).
+- TMDB-API-Key: wird beim Build aus der Umgebungsvariable `TMDB_API_KEY` (CI: Repository-Secret) oder aus `.env`
+  (lokal, siehe `.env.example`) in die JAR eingebettet. `.env` niemals committen und den Key nicht ausgeben.

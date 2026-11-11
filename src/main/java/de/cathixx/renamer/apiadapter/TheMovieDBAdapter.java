@@ -3,7 +3,6 @@ package de.cathixx.renamer.apiadapter;
 import de.cathixx.renamer.data.Episode;
 import de.cathixx.renamer.data.Language;
 import de.cathixx.renamer.data.TVShow;
-import de.cathixx.renamer.key.ApiKeyProvider;
 import de.cathixx.renamer.util.TVShowComparator;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -49,9 +48,9 @@ public class TheMovieDBAdapter implements TVShowApiAdapter {
 
   private final TmdbApi tmdbApi;
 
-  public TheMovieDBAdapter(Collection<Language> languages) {
+  public TheMovieDBAdapter(Collection<Language> languages, String apiKey) {
     this.languages = languages;
-    this.tmdbApi = new TmdbApi(new ApiKeyRequestExecutor(ApiKeyProvider.getMovieDbKey()));
+    this.tmdbApi = new TmdbApi(new ApiKeyRequestExecutor(apiKey));
   }
 
   @Override
