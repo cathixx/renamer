@@ -6,6 +6,7 @@ log4j = "2.26.1"
 [libraries]
 themoviedbapi = { module = "uk.co.conoregan:themoviedbapi", version = "3.1.0" }
 slf4j-api = { module = "org.slf4j:slf4j-api", version = "2.0.20" }
+jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version = "2.22" }
 
 # JavaFX: the version is also used by the javafx plugin (see build.gradle)
 javafx-graphics = { module = "org.openjfx:javafx-graphics", version.ref = "javafx" }

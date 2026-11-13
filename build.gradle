@@ -27,6 +27,8 @@ repositories {
 dependencies {
     implementation libs.themoviedbapi
     implementation libs.slf4j.api
+    // themoviedbapi classes are annotated with Jackson annotations, which are only on its runtime classpath
+    compileOnly libs.jackson.annotations
 
     testImplementation platform(libs.junit.bom)
     testImplementation libs.junit.jupiter
