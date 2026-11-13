@@ -43,7 +43,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
         with:
-          lfs: true          # gradle-wrapper.jar is stored in Git LFS
           fetch-depth: 0     # full history + tags, needed to determine the next version
 
       - name: Determine next version
