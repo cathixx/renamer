@@ -1,5 +1,9 @@
 # MediaRenamer by cathixx
 
+> **This project is no longer maintained.** It has been replaced by
+> [MediaRenamer](https://github.com/cathixx/MediaRenamer), a cross-platform desktop
+> application with a standalone executable. Please use that one instead.
+
 This is a JavaFX based tool to rename your locally stored tv show recordings.
 
 # Usage
